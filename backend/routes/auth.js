@@ -9,7 +9,7 @@ const router = express.Router();
 // Generate JWT Token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+    expiresIn: process.env.JWT_EXPIRE || '30d',
   });
 };
 
@@ -75,7 +75,8 @@ router.post('/register', [
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Registration error:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: process.env.NODE_ENV === 'development' ? error.message : undefined });
   }
 });
 
@@ -130,7 +131,8 @@ router.post('/login', [
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Login error:', error);
+    res.status(500).json({ success: false, message: 'Server error', error: process.env.NODE_ENV === 'development' ? error.message : undefined });
   }
 });
 
@@ -142,7 +144,7 @@ router.post('/logout', (req, res) => {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
-  
+
   res.status(200).json({
     success: true,
     message: 'User logged out successfully'
