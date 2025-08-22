@@ -13,8 +13,8 @@ app.use(cookieParser());
 
 // CORS configuration for Render deployment
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? [process.env.FRONTEND_URL || 'https://your-frontend-url.onrender.com']
+  origin: process.env.NODE_ENV === 'production'
+    ? [process.env.FRONTEND_URL || 'https://fitnutrition-app-1.onrender.com']
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -44,8 +44,8 @@ try {
 
 // Root route
 app.get('/', (req, res) => {
-  res.status(200).json({ 
-    success: true, 
+  res.status(200).json({
+    success: true,
     message: 'FitNutrition API is running',
     routes: [
       'GET /health - Health check',
@@ -66,8 +66,8 @@ app.get('/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
-  res.status(500).json({ 
-    success: false, 
+  res.status(500).json({
+    success: false,
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : undefined
   });
