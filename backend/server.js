@@ -14,10 +14,7 @@ app.use(cookieParser());
 // CORS configuration for Render deployment
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? [
-        process.env.FRONTEND_URL || 'https://fitnutrition-app-1.onrender.com',
-        'https://fitnutrition-app-1.onrender.com'
-      ]
+    ? ['https://fitnutrition-app-1.onrender.com']
     : ['http://localhost:3000', 'http://localhost:5173'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -26,6 +23,20 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+// Additional CORS headers for preflight requests
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' ? 'https://fitnutrition-app-1.onrender.com' : req.get('Origin'));
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin,X-Requested-With,Content-Type,Accept,Authorization');
+
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Debug middleware to log all requests
 app.use((req, res, next) => {
