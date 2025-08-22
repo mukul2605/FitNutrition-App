@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import API_BASE_URL from '../config/api';
+
+// Create axios instance for dashboard
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  withCredentials: true,
+});
 
 const Dashboard = () => {
   const [nutritionData, setNutritionData] = useState(null);
@@ -14,9 +21,14 @@ const Dashboard = () => {
 
   const fetchNutritionData = async () => {
     try {
-      const res = await axios.get('/nutrition/calculations');
+      const token = localStorage.getItem('token');
+      if (token) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      }
+      const res = await api.get('/nutrition/calculations');
       setNutritionData(res.data.data);
     } catch (error) {
+      console.error('Nutrition data fetch error:', error);
       setError('Failed to fetch nutrition data');
     }
     setLoading(false);
