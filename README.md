@@ -1,3 +1,5 @@
+[Deployed here, Click to visit](https://fitnutrition-app-1.onrender.com)
+
 # FitNutrition - MERN Stack Fitness Application
 
 A comprehensive fitness and nutrition tracking application built with the MERN stack that provides personalized nutrition recommendations, macro/micronutrient calculations, and fitness goal tracking.
