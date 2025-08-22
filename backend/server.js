@@ -23,10 +23,40 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/profile', require('./routes/profile'));
-app.use('/api/nutrition', require('./routes/nutrition'));
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
+// Test route loading
+try {
+  console.log('Loading routes...');
+  app.use('/api/auth', require('./routes/auth'));
+  console.log('Auth routes loaded');
+  app.use('/api/profile', require('./routes/profile'));
+  console.log('Profile routes loaded');
+  app.use('/api/nutrition', require('./routes/nutrition'));
+  console.log('Nutrition routes loaded');
+} catch (error) {
+  console.error('Error loading routes:', error);
+}
+
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({ 
+    success: true, 
+    message: 'FitNutrition API is running',
+    routes: [
+      'GET /health - Health check',
+      'POST /api/auth/register - Register user',
+      'POST /api/auth/login - Login user',
+      'GET /api/auth/me - Get current user',
+      'PUT /api/profile - Update profile',
+      'GET /api/nutrition/calculations - Get nutrition calculations'
+    ]
+  });
+});
 
 // Health check endpoint for Render
 app.get('/health', (req, res) => {
